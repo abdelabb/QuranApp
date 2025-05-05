@@ -4,6 +4,8 @@ struct ContentView: View {
     @AppStorage("quranLanguage") private var lang: String = "ar"
     @AppStorage("fontSize") private var fontSize: Double = 18
     @State private var showingSettings = false
+    @AppStorage("hasLaunchedBefore") private var hasLaunchedBefore: Bool = false
+    @State private var showWelcomeAlert = false
 
     var body: some View {
         NavigationStack { // 🔁 ici on entoure TabView dans NavigationStack
@@ -63,6 +65,30 @@ struct ContentView: View {
                 }
             }
             }
+        
+        .onAppear {
+            if !hasLaunchedBefore {
+                if let deviceLang = Locale.current.languageCode {
+                    switch deviceLang {
+                    case "fr":
+                        lang = "fr"
+                    case "en":
+                        lang = "en"
+                    default:
+                        lang = "ar"
+                    }
+                }
+                hasLaunchedBefore = true
+                showWelcomeAlert = true
+            }
+        }
+        .alert(isPresented: $showWelcomeAlert) {
+            Alert(
+                title: Text(welcomeTitle()),
+                message: Text(welcomeMessage()),
+                dismissButton: .default(Text("OK"))
+            )
+        }
         }
     func tabTitle(_ key: String) -> String {
         switch lang {
@@ -72,6 +98,25 @@ struct ContentView: View {
             return ["quran": "Quran", "qibla": "Qibla", "hadith": "Hadith"][key] ?? key
         default: // "ar"
             return ["quran": "القرآن", "qibla": "القبلة", "hadith": "الحديث"][key] ?? key
+        }
+    }
+    
+    func welcomeTitle() -> String {
+        switch lang {
+        case "fr": return "Bienvenue !"
+        case "en": return "Welcome!"
+        default:   return "مرحبًا بك!"
+        }
+    }
+
+    func welcomeMessage() -> String {
+        switch lang {
+        case "fr":
+            return "Bienvenue sur QuranApp.\nApplication simple pour la lecture et l'écoute du Coran, une Qibla pour vous guider, et un Hadith du jour."
+        case "en":
+            return "Welcome to QuranApp.\nA simple app for reading and listening to the Quran, a Qibla to guide you, and a Hadith of the day."
+        default:
+            return "مرحبًا بك في QuranApp.\nتطبيق بسيط لقراءة وسماع القرآن، مع قبلة لتوجيهك، وحديث يومي."
         }
     }
     }
