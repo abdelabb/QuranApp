@@ -62,6 +62,7 @@ struct SurahDetailView: View {
         VStack(alignment: lang == "ar" ? .trailing : .leading, spacing: 8) {
             // Texte dans la langue choisie
             Text("\(verse.id). \(displayedText(for: verse))")
+                .foregroundColor(Color(.label))
                 .font(.system(size: fontSize))
                 .multilineTextAlignment(lang == "ar" ? .trailing : .leading)
 
@@ -90,8 +91,9 @@ struct SurahDetailView: View {
             }
         }
         .padding()
-        .background(Color(.systemGray6))
+        .background(Color(.secondarySystemBackground))
         .cornerRadius(10)
+        .shadow(radius: 0.5)
     }
 
     // Fonction pour choisir le texte selon la langue

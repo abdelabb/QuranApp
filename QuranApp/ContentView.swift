@@ -3,29 +3,54 @@ import SwiftUI
 struct ContentView: View {
     @AppStorage("quranLanguage") private var lang: String = "ar"
     @AppStorage("fontSize") private var fontSize: Double = 18
-    @State private var showingSettings = false
     @AppStorage("hasLaunchedBefore") private var hasLaunchedBefore: Bool = false
+
+    @State private var showingSettings = false
     @State private var showWelcomeAlert = false
+    @State private var selectedTab = 0
+
+    @StateObject private var adManager = AdManager()
 
     var body: some View {
-        NavigationStack { // 🔁 ici on entoure TabView dans NavigationStack
-            TabView {
-                QuranView()
-                    .tabItem {
-                        Image(systemName: "book")
-                        Text(tabTitle("quran"))
+        NavigationStack {
+            VStack {
+                TabView(selection: $selectedTab) {
+                    QuranView()
+                        .tag(0)
+                        .tabItem {
+                            Image(systemName: "book")
+                            Text(tabTitle("quran"))
+                        }
+
+                    QiblaView()
+                        .tag(1)
+                        .tabItem {
+                            Image(systemName: "location.north.line")
+                            Text(tabTitle("qibla"))
+                        }
+
+                    HadithView()
+                        .tag(2)
+                        .tabItem {
+                            Image(systemName: "quote.bubble")
+                            Text(tabTitle("hadith"))
+                        }
+                }
+                .onChange(of: selectedTab) { _ in
+                    if adManager.shouldShowAdAfterPageChange() {
+                        if let rootVC = UIApplication.shared.connectedScenes
+                            .compactMap({ $0 as? UIWindowScene })
+                            .first?.windows.first?.rootViewController {
+                            adManager.showAdOnceIfPossible(from: rootVC)
+                        }
                     }
-                QiblaView()
-                    .tabItem {
-                               Image(systemName: "location.north.line")
-                               Text(tabTitle("qibla"))
-                           }
-                HadithView()
-                    .tabItem {
-                                Image(systemName: "quote.bubble")
-                                Text(tabTitle("hadith"))
-                            }
+                }
+
+                // ✅ Bannière en bas
+                BannerAdView(adUnitID: "ca-app-pub-4597213075644517/6104909155")
+                    .frame(height: 50)
             }
+
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
@@ -35,6 +60,7 @@ struct ContentView: View {
                     }
                 }
             }
+
             .sheet(isPresented: $showingSettings) {
                 NavigationStack {
                     Form {
@@ -64,24 +90,28 @@ struct ContentView: View {
                     }
                 }
             }
-            }
-        
+        }
         .onAppear {
             if !hasLaunchedBefore {
                 if let deviceLang = Locale.current.languageCode {
-                    switch deviceLang {
-                    case "fr":
-                        lang = "fr"
-                    case "en":
-                        lang = "en"
-                    default:
-                        lang = "ar"
-                    }
+                    lang = ["fr", "en"].contains(deviceLang) ? deviceLang : "ar"
                 }
                 hasLaunchedBefore = true
                 showWelcomeAlert = true
             }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                if let rootVC = UIApplication.shared.connectedScenes
+                    .compactMap({ $0 as? UIWindowScene })
+                    .first?.windows.first?.rootViewController {
+                    // ✅ Afficher pub qu’une fois au démarrage
+                    if adManager.pageCounter == 0 {
+                        adManager.showAdOnceIfPossible(from: rootVC)
+                    }
+                }
+            }
         }
+
         .alert(isPresented: $showWelcomeAlert) {
             Alert(
                 title: Text(welcomeTitle()),
@@ -89,18 +119,16 @@ struct ContentView: View {
                 dismissButton: .default(Text("OK"))
             )
         }
-        }
+    }
+
     func tabTitle(_ key: String) -> String {
         switch lang {
-        case "fr":
-            return ["quran": "Coran", "qibla": "Qibla", "hadith": "Hadith"][key] ?? key
-        case "en":
-            return ["quran": "Quran", "qibla": "Qibla", "hadith": "Hadith"][key] ?? key
-        default: // "ar"
-            return ["quran": "القرآن", "qibla": "القبلة", "hadith": "الحديث"][key] ?? key
+        case "fr": return ["quran": "Coran", "qibla": "Qibla", "hadith": "Hadith"][key] ?? key
+        case "en": return ["quran": "Quran", "qibla": "Qibla", "hadith": "Hadith"][key] ?? key
+        default:   return ["quran": "القرآن", "qibla": "القبلة", "hadith": "الحديث"][key] ?? key
         }
     }
-    
+
     func welcomeTitle() -> String {
         switch lang {
         case "fr": return "Bienvenue !"
@@ -119,8 +147,7 @@ struct ContentView: View {
             return "مرحبًا بك في QuranApp.\nتطبيق بسيط لقراءة وسماع القرآن، مع قبلة لتوجيهك، وحديث يومي."
         }
     }
-    }
-
+}
 
 #Preview {
     ContentView()

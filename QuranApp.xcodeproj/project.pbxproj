@@ -6,13 +6,31 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		9E97A3642DC8FB06009DF141 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 9E97A3632DC8FB06009DF141 /* GoogleMobileAds */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		9E98E6502DC6648300638017 /* QuranApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuranApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		9E97A3692DC902F8009DF141 /* Exceptions for "QuranApp" folder in "QuranApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+				Untitled.swift,
+			);
+			target = 9E98E64F2DC6648300638017 /* QuranApp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		9E98E6522DC6648300638017 /* QuranApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9E97A3692DC902F8009DF141 /* Exceptions for "QuranApp" folder in "QuranApp" target */,
+			);
 			path = QuranApp;
 			sourceTree = "<group>";
 		};
@@ -23,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E97A3642DC8FB06009DF141 /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +84,7 @@
 			);
 			name = QuranApp;
 			packageProductDependencies = (
+				9E97A3632DC8FB06009DF141 /* GoogleMobileAds */,
 			);
 			productName = QuranApp;
 			productReference = 9E98E6502DC6648300638017 /* QuranApp.app */;
@@ -94,6 +114,9 @@
 			);
 			mainGroup = 9E98E6472DC6648300638017;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9E97A3622DC8FB06009DF141 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9E98E6512DC6648300638017 /* Products */;
 			projectDirPath = "";
@@ -256,6 +279,7 @@
 				DEVELOPMENT_TEAM = VJWLU5Z293;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = QuranApp/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Cette application utilise votre position pour afficher la direction de la Qibla.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -285,6 +309,7 @@
 				DEVELOPMENT_TEAM = VJWLU5Z293;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = QuranApp/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Cette application utilise votre position pour afficher la direction de la Qibla.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -326,6 +351,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9E97A3622DC8FB06009DF141 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9E97A3632DC8FB06009DF141 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9E97A3622DC8FB06009DF141 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9E98E6482DC6648300638017 /* Project object */;
 }
