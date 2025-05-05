@@ -2,17 +2,27 @@ import SwiftUI
 
 struct ContentView: View {
     @AppStorage("quranLanguage") private var lang: String = "ar"
+    @AppStorage("fontSize") private var fontSize: Double = 18
     @State private var showingSettings = false
 
     var body: some View {
         NavigationStack { // 🔁 ici on entoure TabView dans NavigationStack
             TabView {
                 QuranView()
-                    .tabItem { Label("Coran", systemImage: "book") }
+                    .tabItem {
+                        Image(systemName: "book")
+                        Text(tabTitle("quran"))
+                    }
                 QiblaView()
-                    .tabItem { Label("Qibla", systemImage: "location.north.line") }
+                    .tabItem {
+                               Image(systemName: "location.north.line")
+                               Text(tabTitle("qibla"))
+                           }
                 HadithView()
-                    .tabItem { Label("Hadith", systemImage: "quote.bubble") }
+                    .tabItem {
+                                Image(systemName: "quote.bubble")
+                                Text(tabTitle("hadith"))
+                            }
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -26,12 +36,22 @@ struct ContentView: View {
             .sheet(isPresented: $showingSettings) {
                 NavigationStack {
                     Form {
-                        Picker("", selection: $lang) {
-                            Text("العربية").tag("ar")
-                            Text("English").tag("en")
-                            Text("Français").tag("fr")
-                        }
+                        Section("Langue du Coran") {
+                            Picker("", selection: $lang) {
+                                Text("العربية").tag("ar")
+                                Text("English").tag("en")
+                                Text("Français").tag("fr")
+                            }
                             .pickerStyle(.segmented)
+                        }
+
+                        Section("Taille du texte") {
+                            Slider(value: $fontSize, in: 14...28, step: 1) {
+                                Text("Taille du texte")
+                            }
+                            Text("Exemple")
+                                .font(.system(size: fontSize))
+                                .foregroundColor(.gray)
                         }
                     }
                     .navigationTitle("Réglages")
@@ -42,7 +62,18 @@ struct ContentView: View {
                     }
                 }
             }
+            }
         }
+    func tabTitle(_ key: String) -> String {
+        switch lang {
+        case "fr":
+            return ["quran": "Coran", "qibla": "Qibla", "hadith": "Hadith"][key] ?? key
+        case "en":
+            return ["quran": "Quran", "qibla": "Qibla", "hadith": "Hadith"][key] ?? key
+        default: // "ar"
+            return ["quran": "القرآن", "qibla": "القبلة", "hadith": "الحديث"][key] ?? key
+        }
+    }
     }
 
 

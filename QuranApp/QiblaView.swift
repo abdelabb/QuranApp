@@ -2,10 +2,12 @@ import SwiftUI
 
 struct QiblaView: View {
     @StateObject private var qiblaManager = QiblaManager()
+    @AppStorage("quranLanguage") private var lang: String = "ar"
+
 
     var body: some View {
         VStack(spacing: 32) {
-            Text("Direction de la Qibla")
+            Text(localized("title"))
                 .font(.title2)
                 .bold()
 
@@ -34,20 +36,29 @@ struct QiblaView: View {
                     .frame(width: 20, height: 20)
             }
 
-            Text("🕋 Qibla à \(Int(qiblaManager.qiblaDirection))°")
+            Text("🕋 \(localized("qiblaAt")) \(Int(qiblaManager.qiblaDirection))°")
                 .font(.headline)
 
             if abs(qiblaManager.qiblaDirection - qiblaManager.userHeading) > 10 {
-                Text("Tourne ton téléphone vers la Qibla")
+                Text(localized("turnPhone"))
                     .foregroundColor(.red)
                     .font(.caption)
             } else {
-                Text("Parfait ! Tu es orienté vers la Qibla")
+                Text(localized("perfect"))
                     .foregroundColor(.green)
                     .font(.caption)
             }
         }
         .padding()
+    }
+    private func localized(_ key: String) -> String {
+        let values: [String: [String: String]] = [
+            "title": ["fr": "Direction de la Qibla", "en": "Qibla Direction", "ar": "اتجاه القبلة"],
+            "qiblaAt": ["fr": "Qibla à", "en": "Qibla at", "ar": "القبلة عند"],
+            "turnPhone": ["fr": "Tourne ton téléphone vers la Qibla", "en": "Turn your phone toward the Qibla", "ar": "وجّه هاتفك نحو القبلة"],
+            "perfect": ["fr": "Parfait ! Tu es orienté vers la Qibla", "en": "Perfect! You're facing the Qibla", "ar": "رائع! أنت متجه نحو القبلة"]
+        ]
+        return values[key]?[lang] ?? key
     }
 }
 

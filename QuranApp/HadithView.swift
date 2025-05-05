@@ -5,6 +5,7 @@ struct HadithView: View {
     @State private var isLoading: Bool = true
     @State private var errorText: String?
     @AppStorage("quranLanguage") private var lang: String = "ar"
+    @AppStorage("fontSize") private var fontSize: Double = 18
 
     var body: some View {
         VStack(spacing: 20) {
@@ -14,7 +15,7 @@ struct HadithView: View {
             else if let h = hadith {
                 ScrollView {
                     VStack(spacing: 16) {
-                        Text("Hadith du jour")
+                        Text(localizedTitle())
                             .font(.headline)
 
                         Text(lang == "ar" ? "🇸🇦 En arabe" : lang == "fr" ? "🇫🇷 En français" : "🇬🇧 In English")
@@ -22,7 +23,8 @@ struct HadithView: View {
                             .foregroundColor(.gray)
                         // Texte principal selon la langue sélectionnée
                         Text(getLocalizedHadithText(h))
-                            .font(.body)
+                          //  .font(.body)
+                            .font(.system(size: fontSize))
                             .multilineTextAlignment(lang == "ar" ? .trailing : .leading)
                             .padding()
 
@@ -77,6 +79,14 @@ struct HadithView: View {
         case "fr": return h.french ?? "[Pas de traduction en français]"
         case "en": fallthrough
         default: return h.english ?? "[No English translation]"
+        }
+    }
+    private func localizedTitle() -> String {
+        switch lang {
+        case "ar": return "حديث اليوم"
+        case "fr": return "Hadith du jour"
+        case "en": return "Hadith of the Day"
+        default:   return "Hadith"
         }
     }
 }

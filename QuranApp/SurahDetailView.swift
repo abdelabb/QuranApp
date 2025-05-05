@@ -6,6 +6,7 @@ struct SurahDetailView: View {
 
     // Langue sélectionnée ("ar", "fr", "en")
     @AppStorage("quranLanguage") private var lang: String = "ar"
+    @AppStorage("fontSize") private var fontSize: Double = 18
 
     var body: some View {
         ScrollView {
@@ -61,6 +62,7 @@ struct SurahDetailView: View {
         VStack(alignment: lang == "ar" ? .trailing : .leading, spacing: 8) {
             // Texte dans la langue choisie
             Text("\(verse.id). \(displayedText(for: verse))")
+                .font(.system(size: fontSize))
                 .multilineTextAlignment(lang == "ar" ? .trailing : .leading)
 
             // Bouton audio
