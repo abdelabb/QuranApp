@@ -148,4 +148,6 @@ struct SurahDetailView: View {
         default: return surah.name
         }
     }
+    
 }
+

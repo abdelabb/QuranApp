@@ -10,7 +10,11 @@ struct ContentView: View {
     @State private var selectedTab = 0
 
     @StateObject private var adManager = AdManager()
-
+    @AppStorage("appOpenCount") private var appOpenCount: Int = 0
+    @AppStorage("hasRatedApp") private var hasRatedApp: Bool = false
+    @State private var showRateCard: Bool = false
+    
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -92,6 +96,13 @@ struct ContentView: View {
             }
         }
         .onAppear {
+            appOpenCount += 1
+
+              if appOpenCount >= 2 && !hasRatedApp {
+                  // Affiche la carte après 5 ouvertures
+                  showRateCard = true
+              }
+            
             if !hasLaunchedBefore {
                 if let deviceLang = Locale.current.languageCode {
                     lang = ["fr", "en"].contains(deviceLang) ? deviceLang : "ar"
@@ -118,6 +129,18 @@ struct ContentView: View {
                 }
             )
         }
+        .overlay(
+            Group {
+                if showRateCard {
+                    RateAppCard {
+                        hasRatedApp = true
+                        showRateCard = false
+                    }
+                    .transition(.move(edge: .bottom))
+                    .animation(.easeInOut, value: showRateCard)
+                }
+            }
+        )
     }
 
     func tabTitle(_ key: String) -> String {
