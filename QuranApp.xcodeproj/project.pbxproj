@@ -8,9 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		9E97A3642DC8FB06009DF141 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 9E97A3632DC8FB06009DF141 /* GoogleMobileAds */; };
+		9E97A3712DC92464009DF141 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E97A3702DC92464009DF141 /* AdSupport.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9E97A3702DC92464009DF141 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		9E98E6502DC6648300638017 /* QuranApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuranApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -41,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E97A3712DC92464009DF141 /* AdSupport.framework in Frameworks */,
 				9E97A3642DC8FB06009DF141 /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -48,10 +51,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9E97A36F2DC92463009DF141 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9E97A3702DC92464009DF141 /* AdSupport.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		9E98E6472DC6648300638017 = {
 			isa = PBXGroup;
 			children = (
 				9E98E6522DC6648300638017 /* QuranApp */,
+				9E97A36F2DC92463009DF141 /* Frameworks */,
 				9E98E6512DC6648300638017 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -116,6 +128,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				9E97A3622DC8FB06009DF141 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				9E97A3722DCBF106009DF141 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9E98E6512DC6648300638017 /* Products */;
@@ -286,12 +299,13 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.myAllergie.QuranApp;
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quranapp.abdelmalek;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -316,12 +330,13 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.myAllergie.QuranApp;
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quranapp.abdelmalek;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -359,6 +374,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 12.3.0;
+			};
+		};
+		9E97A3722DCBF106009DF141 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.12.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

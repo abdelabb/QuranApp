@@ -9,6 +9,7 @@ class AudioPlayer: ObservableObject {
     @Published var currentTime: TimeInterval = 0
     @Published var duration: TimeInterval = 1
     @Published var isLoading: Bool = false
+    @Published var isPlaying: Bool = false
 
     func playAudio(from urlString: String) {
         guard let url = URL(string: urlString) else { return }
@@ -23,6 +24,7 @@ class AudioPlayer: ObservableObject {
                     self.player?.prepareToPlay()
                     self.player?.play()
                     self.duration = self.player?.duration ?? 1
+                    self.isPlaying = true
                     self.startTimer()
                     self.isLoading = false
                 }
@@ -42,8 +44,9 @@ class AudioPlayer: ObservableObject {
             do {
                 player = try AVAudioPlayer(contentsOf: url)
                 player?.prepareToPlay()
-                restorePlaybackPosition(for: surahName) // ⬅️ Reprise ici
+                restorePlaybackPosition(for: surahName)
                 player?.play()
+                isPlaying = true
                 duration = player?.duration ?? 1
                 startTimer()
                 isLoading = false
@@ -59,16 +62,19 @@ class AudioPlayer: ObservableObject {
 
     func pause() {
         player?.pause()
+        isPlaying = false
         timer?.invalidate()
     }
 
     func resume() {
         player?.play()
+        isPlaying = true
         startTimer()
     }
 
     func stop() {
         player?.stop()
+        isPlaying = false
         timer?.invalidate()
         currentTime = 0
     }
@@ -84,6 +90,7 @@ class AudioPlayer: ObservableObject {
             self.currentTime = self.player?.currentTime ?? 0
         }
     }
+
     func savePlaybackPosition(for surah: String) {
         UserDefaults.standard.set(currentTime, forKey: "position_\(surah)")
     }

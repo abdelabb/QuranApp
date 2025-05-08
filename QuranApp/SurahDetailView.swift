@@ -11,7 +11,7 @@ struct SurahDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: lang == "ar" ? .trailing : .leading, spacing: 16) {
-                surahHeader
+                //surahHeader
                 audioControls
                 verseList
             }
@@ -25,28 +25,40 @@ struct SurahDetailView: View {
         }
     }
 
-    private var surahHeader: some View {
-        Button(action: {
-            let surahName = String(format: "%03d", surah.id)
-            audioPlayer.playSurah(named: surahName)
-        }) {
-            Label("Écouter la sourate complète", systemImage: "play.fill")
-                .foregroundColor(.green)
-        }
-    }
+//    private var surahHeader: some View {
+//        Button(action: {
+//            let surahName = String(format: "%03d", surah.id)
+//            audioPlayer.playSurah(named: surahName)
+//        }) {
+//            Label("Écouter la sourate complète", systemImage: "play.fill")
+//                .foregroundColor(.green)
+//        }
+//    }
 
     private var audioControls: some View {
         HStack(spacing: 20) {
-            Button(action: { audioPlayer.pause() }) {
-                Label("Pause", systemImage: "pause.fill")
-                    .foregroundColor(.orange)
+            // Play/Pause
+            Button(action: {
+                if audioPlayer.isPlaying {
+                    audioPlayer.pause()
+                } else {
+                    let surahName = String(format: "%03d", surah.id)
+                    audioPlayer.playSurah(named: surahName)
+                }
+            }) {
+                Image(systemName: audioPlayer.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                    .resizable()
+                    .frame(width: 36, height: 36)
+                    .foregroundColor(audioPlayer.isPlaying ? .orange : .blue)
             }
-            Button(action: { audioPlayer.resume() }) {
-                Label("Reprendre", systemImage: "play.circle.fill")
-                    .foregroundColor(.blue)
-            }
-            Button(action: { audioPlayer.stop() }) {
-                Label("Arrêter", systemImage: "stop.fill")
+
+            // Stop
+            Button(action: {
+                audioPlayer.stop()
+            }) {
+                Image(systemName: "stop.circle.fill")
+                    .resizable()
+                    .frame(width: 36, height: 36)
                     .foregroundColor(.red)
             }
         }

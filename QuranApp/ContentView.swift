@@ -12,7 +12,7 @@ struct ContentView: View {
     @StateObject private var adManager = AdManager()
 
     var body: some View {
-        NavigationStack {
+        NavigationView {
             VStack {
                 TabView(selection: $selectedTab) {
                     QuranView()
@@ -46,8 +46,8 @@ struct ContentView: View {
                     }
                 }
 
-                // ✅ Bannière en bas
-                BannerAdView(adUnitID: "ca-app-pub-4597213075644517/6104909155")
+                // ✅ Bannière réelle AdMob en bas
+                BannerAdView()
                     .frame(height: 50)
             }
 
@@ -62,7 +62,7 @@ struct ContentView: View {
             }
 
             .sheet(isPresented: $showingSettings) {
-                NavigationStack {
+                NavigationView {
                     Form {
                         Section("Langue du Coran") {
                             Picker("", selection: $lang) {
@@ -96,27 +96,26 @@ struct ContentView: View {
                 if let deviceLang = Locale.current.languageCode {
                     lang = ["fr", "en"].contains(deviceLang) ? deviceLang : "ar"
                 }
-                hasLaunchedBefore = true
                 showWelcomeAlert = true
-            }
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                if let rootVC = UIApplication.shared.connectedScenes
-                    .compactMap({ $0 as? UIWindowScene })
-                    .first?.windows.first?.rootViewController {
-                    // ✅ Afficher pub qu’une fois au démarrage
-                    if adManager.pageCounter == 0 {
-                        adManager.showAdOnceIfPossible(from: rootVC)
-                    }
-                }
+            } else {
+                adManager.loadAd()
             }
         }
-
         .alert(isPresented: $showWelcomeAlert) {
             Alert(
                 title: Text(welcomeTitle()),
                 message: Text(welcomeMessage()),
-                dismissButton: .default(Text("OK"))
+                dismissButton: .default(Text("OK")) {
+                    hasLaunchedBefore = true
+                    adManager.loadAd()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        if let rootVC = UIApplication.shared.connectedScenes
+                            .compactMap({ $0 as? UIWindowScene })
+                            .first?.windows.first?.rootViewController {
+                            adManager.showAdOnceIfPossible(from: rootVC)
+                        }
+                    }
+                }
             )
         }
     }
@@ -147,8 +146,4 @@ struct ContentView: View {
             return "مرحبًا بك في QuranApp.\nتطبيق بسيط لقراءة وسماع القرآن، مع قبلة لتوجيهك، وحديث يومي."
         }
     }
-}
-
-#Preview {
-    ContentView()
 }
