@@ -11,13 +11,12 @@ struct SurahDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: lang == "ar" ? .trailing : .leading, spacing: 16) {
-                //surahHeader
                 audioControls
                 verseList
             }
             .padding()
         }
-        .navigationTitle(surah.name)
+        .navigationTitle(displayedSurahName)
         .onDisappear {
             let surahName = String(format: "%03d", surah.id)
             audioPlayer.savePlaybackPosition(for: surahName)
@@ -25,15 +24,6 @@ struct SurahDetailView: View {
         }
     }
 
-//    private var surahHeader: some View {
-//        Button(action: {
-//            let surahName = String(format: "%03d", surah.id)
-//            audioPlayer.playSurah(named: surahName)
-//        }) {
-//            Label("Écouter la sourate complète", systemImage: "play.fill")
-//                .foregroundColor(.green)
-//        }
-//    }
 
     private var audioControls: some View {
         HStack(spacing: 20) {
@@ -72,11 +62,20 @@ struct SurahDetailView: View {
 
     private func verseView(for verse: Verse) -> some View {
         VStack(alignment: lang == "ar" ? .trailing : .leading, spacing: 8) {
-            // Texte dans la langue choisie
-            Text("\(verse.id). \(displayedText(for: verse))")
-                .foregroundColor(Color(.label))
+            // Texte arabe (toujours affiché)
+            Text("\(verse.id). \(verse.textAr)")
+                .foregroundColor(.primary)
                 .font(.system(size: fontSize))
-                .multilineTextAlignment(lang == "ar" ? .trailing : .leading)
+                .multilineTextAlignment(.leading)
+
+            // Traduction selon la langue sélectionnée
+            if lang != "ar" {
+                Text(displayedText(for: verse))
+                    .foregroundColor(.secondary)
+                    .font(.system(size: fontSize - 2))
+                    .italic()
+                    .multilineTextAlignment(.leading)
+            }
 
             // Bouton audio
             Button(action: {
@@ -91,7 +90,7 @@ struct SurahDetailView: View {
 
             // Bouton partage
             Button(action: {
-                let sharedText = displayedText(for: verse)
+                let sharedText = "\(verse.textAr)\n\(displayedText(for: verse))"
                 let activityVC = UIActivityViewController(activityItems: [sharedText], applicationActivities: nil)
                 if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                    let rootVC = windowScene.windows.first?.rootViewController {
@@ -114,6 +113,13 @@ struct SurahDetailView: View {
         case "fr": return verse.textFr
         case "en": return verse.textEn
         default: return verse.textAr
+        }
+    }
+    private var displayedSurahName: String {
+        switch lang {
+        case "fr": return surah.transliteration
+        case "en": return surah.translation
+        default: return surah.name
         }
     }
 }
