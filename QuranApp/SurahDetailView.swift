@@ -26,30 +26,51 @@ struct SurahDetailView: View {
 
 
     private var audioControls: some View {
-        HStack(spacing: 20) {
-            // Play/Pause
-            Button(action: {
-                if audioPlayer.isPlaying {
-                    audioPlayer.pause()
-                } else {
-                    let surahName = String(format: "%03d", surah.id)
-                    audioPlayer.playSurah(named: surahName)
+        VStack(spacing: 10) {
+            // Slider de progression audio
+            Slider(value: Binding(
+                get: { audioPlayer.currentTime },
+                set: { newValue in
+                    audioPlayer.seek(to: newValue)
                 }
-            }) {
-                Image(systemName: audioPlayer.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                    .resizable()
-                    .frame(width: 36, height: 36)
-                    .foregroundColor(audioPlayer.isPlaying ? .orange : .blue)
+            ), in: 0...audioPlayer.duration)
+            .accentColor(.blue)
+
+            // Indicateur de temps (facultatif)
+            HStack {
+                Text(formatTime(audioPlayer.currentTime))
+                    .font(.caption)
+                Spacer()
+                Text(formatTime(audioPlayer.duration))
+                    .font(.caption)
             }
 
-            // Stop
-            Button(action: {
-                audioPlayer.stop()
-            }) {
-                Image(systemName: "stop.circle.fill")
-                    .resizable()
-                    .frame(width: 36, height: 36)
-                    .foregroundColor(.red)
+            // Boutons Lecture/Pause et Stop
+            HStack(spacing: 20) {
+                // Play/Pause
+                Button(action: {
+                    if audioPlayer.isPlaying {
+                        audioPlayer.pause()
+                    } else {
+                        let surahName = String(format: "%03d", surah.id)
+                        audioPlayer.playSurah(named: surahName)
+                    }
+                }) {
+                    Image(systemName: audioPlayer.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                        .resizable()
+                        .frame(width: 36, height: 36)
+                        .foregroundColor(audioPlayer.isPlaying ? .orange : .blue)
+                }
+
+                // Stop
+                Button(action: {
+                    audioPlayer.stop()
+                }) {
+                    Image(systemName: "stop.circle.fill")
+                        .resizable()
+                        .frame(width: 36, height: 36)
+                        .foregroundColor(.red)
+                }
             }
         }
     }
@@ -58,6 +79,11 @@ struct SurahDetailView: View {
         ForEach(surah.verses) { verse in
             verseView(for: verse)
         }
+    }
+    private func formatTime(_ time: TimeInterval) -> String {
+        let minutes = Int(time) / 60
+        let seconds = Int(time) % 60
+        return String(format: "%02d:%02d", minutes, seconds)
     }
 
     private func verseView(for verse: Verse) -> some View {
