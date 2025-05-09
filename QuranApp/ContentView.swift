@@ -51,8 +51,8 @@ struct ContentView: View {
                 }
 
                 // ✅ Bannière réelle AdMob en bas
-                BannerAdView()
-                    .frame(height: 50)
+               // BannerAdView()
+                    //.frame(height: 50)
             }
 
             .toolbar {
